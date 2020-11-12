@@ -170,6 +170,13 @@ def HasStdExtZvamo : Predicate<"Subtarget->hasStdExtZvamo()">,
                               AssemblerPredicate<(all_of FeatureExtZvamo),
                               "'Zvamo'(Vector AMO Operations)">;
 
+def FeatureExtHwlp
+    : SubtargetFeature<"experimental-hwl", "HasStdExtHwlp", "true",
+                       "'Hwlp' (Hardware Loop)">;
+def HasStdExtHwlp : Predicate<"Subtarget->hasStdExtHwlp()">,
+                             AssemblerPredicate<(all_of FeatureExtHwlp),
+                             "'Hwlp' (Hardware Loop)";
+
 def Feature64Bit
     : SubtargetFeature<"64bit", "HasRV64", "true", "Implements RV64">;
 def IsRV64 : Predicate<"Subtarget->is64Bit()">,

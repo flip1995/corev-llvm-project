@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "RISCVAsmBackend.h"
+#include "RISCVFixupKinds.h"
 #include "RISCVMCExpr.h"
 #include "llvm/ADT/APInt.h"
 #include "llvm/MC/MCAsmLayout.h"
@@ -67,7 +68,9 @@ RISCVAsmBackend::getFixupKindInfo(MCFixupKind Kind) const {
       {"fixup_riscv_call", 0, 64, MCFixupKindInfo::FKF_IsPCRel},
       {"fixup_riscv_call_plt", 0, 64, MCFixupKindInfo::FKF_IsPCRel},
       {"fixup_riscv_relax", 0, 0, 0},
-      {"fixup_riscv_align", 0, 0, 0}};
+      {"fixup_riscv_align", 0, 0, 0},
+      {"fixup_riscv_cv_pcrel_ui12", 20, 12, MCFixupKindInfo::FKF_IsPCRel},
+      {"fixup_riscv_cv_pcrel_ui5", 15, 5, MCFixupKindInfo::FKF_IsPCRel}};
   static_assert((array_lengthof(Infos)) == RISCV::NumTargetFixupKinds,
                 "Not all fixup kinds added to Infos array");
 
@@ -312,7 +315,10 @@ static uint64_t adjustFixupValue(const MCFixup &Fixup, uint64_t Value,
             (Bit5 << 2);
     return Value;
   }
-
+  case RISCV::fixup_riscv_cv_pcrel_ui12:
+    return (Value & 0xfff) >> 1;
+  case RISCV::fixup_riscv_cv_pcrel_ui5:
+    return (Value & 0x1f) >> 1;
   }
 }
 

@@ -9,6 +9,7 @@
 #include "MCTargetDesc/RISCVFixupKinds.h"
 #include "MCTargetDesc/RISCVMCExpr.h"
 #include "MCTargetDesc/RISCVMCTargetDesc.h"
+#include "llvm/BinaryFormat/ELF.h"
 #include "llvm/MC/MCContext.h"
 #include "llvm/MC/MCELFObjectWriter.h"
 #include "llvm/MC/MCFixup.h"
@@ -86,6 +87,10 @@ unsigned RISCVELFObjectWriter::getRelocType(MCContext &Ctx,
       return ELF::R_RISCV_CALL;
     case RISCV::fixup_riscv_call_plt:
       return ELF::R_RISCV_CALL_PLT;
+    case RISCV::fixup_riscv_cv_pcrel_ui12:
+      return ELF::R_RISCV_CV_PCREL_UI12;
+    case RISCV::fixup_riscv_cv_pcrel_ui5:
+      return ELF::R_RISCV_CV_PCREL_UI5;
     }
   }
 
