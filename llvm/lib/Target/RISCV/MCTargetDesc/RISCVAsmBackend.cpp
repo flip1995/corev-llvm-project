@@ -315,9 +315,9 @@ static uint64_t adjustFixupValue(const MCFixup &Fixup, uint64_t Value,
             (Bit5 << 2);
     return Value;
   }
-  case RISCV::fixup_riscv_cv_pcrel_ui12:
+  case RISCV::fixup_riscv_cvpcrel_ui12:
     return (Value & 0xfff) >> 1;
-  case RISCV::fixup_riscv_cv_pcrel_ui5:
+  case RISCV::fixup_riscv_cvpcrel_urs1:
     return (Value & 0x1f) >> 1;
   }
 }

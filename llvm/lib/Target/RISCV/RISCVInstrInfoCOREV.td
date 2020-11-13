@@ -18,7 +18,7 @@ def CVUImm1AsmOperand : AsmOperandClass {
   let DiagnosticType = "InvalidCVUImm1";
 }
 
-def CVUImmAsmOperand<int width> : AsmOperandClass {
+class CVUImmAsmOperand<int width> : AsmOperandClass {
   let Name = "CVUImm" # width;
   let RenderMethod = "addImmOperands";
   let DiagnosticType = !strconcat("Invalid", Name);
@@ -45,7 +45,7 @@ def cv_uimm12 : Operand<XLenVT>, ImmLeaf<XLenVT, [{return isUInt<12>(Imm);}]> {
   let OperandNamespace = "RISCVOp";
 }
 
-let Predicates = [HasStdExtHwlp], hasSideEffects = 0, mayLoad = 0, mayStore = 0 in {
+let Predicates = [HasStdExtCoreVHwlp], hasSideEffects = 0, mayLoad = 0, mayStore = 0 in {
   def STARTI  : RVInstHwlp_ii<0b000, (ins cv_uimm1:$imm1, cv_uimm12:$imm12),
                             "cv.starti", "$imm1, $imm12">,
                 Sched<[]>;
