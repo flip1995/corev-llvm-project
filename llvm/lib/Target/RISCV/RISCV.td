@@ -175,7 +175,7 @@ def FeatureExtHwlp
                        "'Hwlp' (Hardware Loop)">;
 def HasStdExtHwlp : Predicate<"Subtarget->hasStdExtHwlp()">,
                              AssemblerPredicate<(all_of FeatureExtHwlp),
-                             "'Hwlp' (Hardware Loop)";
+                             "'Hwlp' (Hardware Loop)">;
 
 def Feature64Bit
     : SubtargetFeature<"64bit", "HasRV64", "true", "Implements RV64">;
