@@ -133,6 +133,12 @@ def uimm5 : Operand<XLenVT>, ImmLeaf<XLenVT, [{return isUInt<5>(Imm);}]> {
 def uimm12 : Operand<XLenVT>, ImmLeaf<XLenVT, [{return isUInt<12>(Imm);}]> {
   let ParserMatchClass = UImmAsmOperand<12>;
   let DecoderMethod = "decodeUImmOperand<12>";
+  let MCOperandPredicate = [{
+    int64_t Imm;
+    if (MCOp.evaluateAsConstantImm(Imm))
+      return isUInt<12>(Imm);
+    return MCOp.isBareSymbolRef();
+  }];
   let OperandType = "OPERAND_UIMM12";
   let OperandNamespace = "RISCVOp";
 }

@@ -27,41 +27,61 @@ class CVUImmAsmOperand<int width> : AsmOperandClass {
 def cv_uimm1 : Operand<XLenVT>, ImmLeaf<XLenVT, [{return isUInt<1>(Imm);}]> {
   let ParserMatchClass = CVUImm1AsmOperand;
   let DecoderMethod = "decodeUImmOperand<1>";
+  let MCOperandPredicate = [{
+    int64_t Imm;
+    if (MCOp.evaluateAsConstantImm(Imm))
+      return isUInt<1>(Imm);
+    return false;
+  }];
   let OperandType = "OPERAND_UIMM1";
   let OperandNamespace = "RISCVOp";
 }
 
-def cv_uimm5 : Operand<XLenVT>, ImmLeaf<XLenVT, [{return isUInt<5>(Imm);}]> {
+def cv_uimm5 : Operand<XLenVT>,
+               ImmLeaf<XLenVT, [{return isUInt<5>(Imm) && (Imm & 1) == 0;}]> {
   let ParserMatchClass = CVUImmAsmOperand<5>;
   let DecoderMethod = "decodeUImmOperand<5>";
+  let MCOperandPredicate = [{
+    int64_t Imm;
+    if (MCOp.evaluateAsConstantImm(Imm))
+      return isUInt<5>(Imm) && (Imm & 1) == 0;
+    return false;
+  }];
   let OperandType = "OPERAND_UIMM5";
   let OperandNamespace = "RISCVOp";
 }
 
-def cv_uimm12 : Operand<XLenVT>, ImmLeaf<XLenVT, [{return isUInt<12>(Imm);}]> {
+def cv_uimm12 : Operand<XLenVT>,
+                ImmLeaf<XLenVT, [{return isUInt<12>(Imm) && (Imm & 1) == 0;}]> {
   let ParserMatchClass = CVUImmAsmOperand<12>;
   let DecoderMethod = "decodeUImmOperand<12>";
+  let MCOperandPredicate = [{
+    int64_t Imm;
+    if (MCOp.evaluateAsConstantImm(Imm))
+      return isUInt<12>(Imm) && (Imm & 1) == 0;
+    return false;
+  }];
   let OperandType = "OPERAND_UIMM12";
   let OperandNamespace = "RISCVOp";
 }
 
 let Predicates = [HasStdExtCoreVHwlp], hasSideEffects = 0, mayLoad = 0, mayStore = 0 in {
   def STARTI  : RVInstHwlp_ii<0b000, (ins cv_uimm1:$imm1, cv_uimm12:$imm12),
-                            "cv.starti", "$imm1, $imm12">,
+                              "cv.starti", "$imm1, $imm12">,
                 Sched<[]>;
   def ENDI    : RVInstHwlp_ii<0b001, (ins cv_uimm1:$imm1, cv_uimm12:$imm12),
-                            "cv.endi", "$imm1, $imm12">,
+                              "cv.endi", "$imm1, $imm12">,
                 Sched<[]>;
   def COUNT   : RVInstHwlp_ri<0b010, (ins cv_uimm1:$imm1, GPR:$rs1),
-                            "cv.count", "$imm1, $rs1">,
+                              "cv.count", "$imm1, $rs1">,
                 Sched<[]>;
-  def COUNTI  : RVInstHwlp_ii<0b011, (ins cv_uimm1:$imm1, cv_uimm12:$imm12),
-                            "cv.counti", "$imm1, $imm12">,
+  def COUNTI  : RVInstHwlp_ii<0b011, (ins cv_uimm1:$imm1, uimm12:$imm12),
+                              "cv.counti", "$imm1, $imm12">,
                 Sched<[]>;
   def SETUP   : RVInstHwlp_rii<0b100, (ins cv_uimm1:$imm1, GPR:$rs1, cv_uimm12:$imm12),
-                            "cv.setup", "$imm1, $rs1, $imm12">,
+                               "cv.setup", "$imm1, $rs1, $imm12">,
                 Sched<[]>;
   def SETUPI  : RVInstHwlp_iii<0b101, (ins cv_uimm1:$imm1, cv_uimm5:$imm5, uimm12:$imm12),
-                            "cv.setupi", "$imm1, $imm5, $imm12">,
+                               "cv.setupi", "$imm1, $imm5, $imm12">,
                 Sched<[]>;
 } // Predicates = [HasStdExtHwlp], hasSideEffects = 0, mayLoad = 0, mayStore = 0
