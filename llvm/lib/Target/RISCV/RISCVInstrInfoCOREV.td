@@ -68,22 +68,22 @@ def cv_uimm12 : Operand<XLenVT>,
 }
 
 let Predicates = [HasStdExtCoreVHwlp], hasSideEffects = 0, mayLoad = 0, mayStore = 0 in {
-  def STARTI  : RVInstHwlp_ii<0b000, (ins cv_uimm1:$imm1, cv_uimm12:$imm12),
-                              "cv.starti", "$imm1, $imm12">,
+  def STARTI  : RVInstHwlp_i<0b000, (ins cv_uimm1:$imm1, cv_uimm12:$imm12),
+                             "cv.starti", "$imm1, $imm12">,
                 Sched<[]>;
-  def ENDI    : RVInstHwlp_ii<0b001, (ins cv_uimm1:$imm1, cv_uimm12:$imm12),
-                              "cv.endi", "$imm1, $imm12">,
+  def ENDI    : RVInstHwlp_i<0b001, (ins cv_uimm1:$imm1, cv_uimm12:$imm12),
+                             "cv.endi", "$imm1, $imm12">,
                 Sched<[]>;
-  def COUNT   : RVInstHwlp_ri<0b010, (ins cv_uimm1:$imm1, GPR:$rs1),
-                              "cv.count", "$imm1, $rs1">,
+  def COUNT   : RVInstHwlp_r<0b010, (ins cv_uimm1:$imm1, GPR:$rs1),
+                             "cv.count", "$imm1, $rs1">,
                 Sched<[]>;
-  def COUNTI  : RVInstHwlp_ii<0b011, (ins cv_uimm1:$imm1, uimm12:$imm12),
-                              "cv.counti", "$imm1, $imm12">,
+  def COUNTI  : RVInstHwlp_i<0b011, (ins cv_uimm1:$imm1, uimm12:$imm12),
+                             "cv.counti", "$imm1, $imm12">,
                 Sched<[]>;
-  def SETUP   : RVInstHwlp_rii<0b100, (ins cv_uimm1:$imm1, GPR:$rs1, cv_uimm12:$imm12),
-                               "cv.setup", "$imm1, $rs1, $imm12">,
+  def SETUP   : RVInstHwlp_ri<0b100, (ins cv_uimm1:$imm1, GPR:$rs1, cv_uimm12:$imm12),
+                              "cv.setup", "$imm1, $rs1, $imm12">,
                 Sched<[]>;
-  def SETUPI  : RVInstHwlp_iii<0b101, (ins cv_uimm1:$imm1, cv_uimm5:$imm5, uimm12:$imm12),
-                               "cv.setupi", "$imm1, $imm5, $imm12">,
+  def SETUPI  : RVInstHwlp_ii<0b101, (ins cv_uimm1:$imm1, cv_uimm5:$imm5, uimm12:$imm12),
+                              "cv.setupi", "$imm1, $imm5, $imm12">,
                 Sched<[]>;
 } // Predicates = [HasStdExtHwlp], hasSideEffects = 0, mayLoad = 0, mayStore = 0
