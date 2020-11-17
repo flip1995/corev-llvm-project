@@ -567,8 +567,12 @@ public:
     if (!isImm())
       return false;
     bool IsConstantImm = evaluateConstantImm(getImm(), Imm, VK);
-    return IsConstantImm && isUInt<5>(Imm) && (Imm & 1) == 0 &&
-           VK == RISCVMCExpr::VK_RISCV_None;
+    bool IsValid;
+    if (!IsConstantImm)
+      IsValid = RISCVAsmParser::classifySymbolRef(getImm(), VK, Imm);
+    else
+      IsValid = isUInt<5>(Imm) && (Imm & 1) == 0;
+    return IsValid && VK == RISCVMCExpr::VK_RISCV_None;
   }
 
   bool isCVUImm12() const {
@@ -577,8 +581,12 @@ public:
     if (!isImm())
       return false;
     bool IsConstantImm = evaluateConstantImm(getImm(), Imm, VK);
-    return IsConstantImm && isUInt<12>(Imm) && (Imm & 1) == 0 &&
-           VK == RISCVMCExpr::VK_RISCV_None;
+    bool IsValid;
+    if (!IsConstantImm)
+      IsValid = RISCVAsmParser::classifySymbolRef(getImm(), VK, Imm);
+    else
+      IsValid = isUInt<12>(Imm) && (Imm & 1) == 0;
+    return IsValid && VK == RISCVMCExpr::VK_RISCV_None;
   }
 
   bool isSImm5() const {
