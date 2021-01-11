@@ -114,10 +114,12 @@ let Predicates = [HasExtXCoreVHwlp], usesCustomInserter = 1, hasSideEffects = 0,
 let Predicates = [HasExtXCoreVMac], hasSideEffects = 0, mayLoad = 0, mayStore = 0, Constraints = "$rd = $rd_wb" in {
   // 32x32 bit macs
   def CV_MAC      : RVInstMac<0b0100001, 0b000, (outs GPR:$rd_wb), (ins GPR:$rd, GPR:$rs1, GPR:$rs2),
-                              "cv.mac", "$rd, $rs1, $rs2", []>,
+                              "cv.mac", "$rd, $rs1, $rs2",
+                              [(set GPR:$rd_wb, (int_riscv_cv_mac i32:$rd, i32:$rs1, i32:$rs2))]>,
                     Sched<[]>;
   def CV_MSU      : RVInstMac<0b0100001, 0b001, (outs GPR:$rd_wb), (ins GPR:$rd, GPR:$rs1, GPR:$rs2),
-                              "cv.msu", "$rd, $rs1, $rs2", []>,
+                              "cv.msu", "$rd, $rs1, $rs2",
+                              [(set GPR:$rd_wb, (int_riscv_cv_msu i32:$rd, i32:$rs1, i32:$rs2))]>,
                     Sched<[]>;
 
   // Signed 16x16 bit macs with imm
@@ -155,7 +157,8 @@ let Predicates = [HasExtXCoreVMac], hasSideEffects = 0, mayLoad = 0, mayStore = 
                                 "cv.muls", "$rd, $rs1, $rs2", []>,
                     Sched<[]>;
   def CV_MULHHS   : RVInstMac16<0b11, 0b000, (outs GPR:$rd), (ins GPR:$rs1, GPR:$rs2),
-                                "cv.mulhhs", "$rd, $rs1, $rs2", []>,
+                                "cv.mulhhs", "$rd, $rs1, $rs2",
+                                [(set GPR:$rd, (int_riscv_cv_mulhhs i32:$rs1, i32:$rs2))]>,
                     Sched<[]>;
 
   // Signed 16x16 bit muls with imm
@@ -177,7 +180,8 @@ let Predicates = [HasExtXCoreVMac], hasSideEffects = 0, mayLoad = 0, mayStore = 
                                 "cv.mulu", "$rd, $rs1, $rs2", []>,
                     Sched<[]>;
   def CV_MULHHU   : RVInstMac16<0b01, 0b000, (outs GPR:$rd), (ins GPR:$rs1, GPR:$rs2),
-                                "cv.mulhhu", "$rd, $rs1, $rs2", []>,
+                                "cv.mulhhu", "$rd, $rs1, $rs2",
+                                [(set GPR:$rd, (int_riscv_cv_mulhhu i32:$rs1, i32:$rs2))]>,
                     Sched<[]>;
 
   // Unsigned 16x16 bit muls with imm
