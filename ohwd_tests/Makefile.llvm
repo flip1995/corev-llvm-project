@@ -1,0 +1,46 @@
+all: build objdump
+
+build: memcpy-wo-ext memcpy implicit-memcpy mac-builtin mac
+
+memcpy-wo-ext:
+	clang -target riscv32 -march=rv32imc --sysroot=../../gnu-toolchain/install/riscv32-corev-elf -O2 -c memcpy.c -o memcpy-wo-ext.o
+
+memcpy:
+	clang -target riscv32 -march=rv32imc_xcorevhwlp --sysroot=../../gnu-toolchain/install/riscv32-corev-elf -O2 -c memcpy.c
+
+implicit-memcpy:
+	clang -target riscv32 -march=rv32imc_xcorev -DN=64 -c implicit-memcpy.c # -O2 does not work yet
+
+mac-builtin-fail:
+	clang -target riscv32 -march=rv32imc_xcorevhwlp -O2 -c mac-builtin.c
+
+mac-builtin:
+	clang -target riscv32 -march=rv32imc_xcorevmac -c mac-builtin.c
+
+mac:
+	clang -target riscv32 -march=rv32imc_xcorevmac -O2 -c mac.c
+
+objdump: build
+	@echo
+	@echo "------------------------------------------------------------"
+	@echo
+	llvm-objdump -d memcpy-wo-ext.o --mattr=+m,+c,+xcorev
+	@echo
+	@echo "------------------------------------------------------------"
+	@echo
+	llvm-objdump -d memcpy.o --mattr=+m,+c,+xcorev
+	@echo
+	@echo "------------------------------------------------------------"
+	@echo
+	llvm-objdump -d implicit-memcpy.o --mattr=+m,+c,+xcorev
+	@echo
+	@echo "------------------------------------------------------------"
+	@echo
+	llvm-objdump -d mac-builtin.o --mattr=+m,+c,+xcorev
+	@echo
+	@echo "------------------------------------------------------------"
+	@echo
+	llvm-objdump -d mac.o --mattr=+m,+c,+xcorev
+
+clean:
+	rm -f *.o *.s

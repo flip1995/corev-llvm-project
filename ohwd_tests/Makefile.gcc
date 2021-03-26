@@ -1,0 +1,46 @@
+all: build objdump
+
+build: memcpy-wo-ext memcpy implicit-memcpy mac-builtin-fail mac-builtin mac
+
+memcpy-wo-ext:
+	riscv32-corev-elf-gcc -march=rv32imc -mabi=ilp32 -O2 -c -o memcpy-wo-ext.o memcpy.c
+
+memcpy:
+	riscv32-corev-elf-gcc -march=rv32imc_xcorevhwlp -mabi=ilp32 -O2 -c -o memcpy.o memcpy.c
+
+implicit-memcpy:
+	riscv32-corev-elf-gcc -march=rv32imc_xcorev -mabi=ilp32 -DN=64 -O2 -c -o implicit-memcpy.o implicit-memcpy.c
+
+mac-builtin-fail:
+	riscv32-corev-elf-gcc -march=rv32imc_xcorevhwlp -mabi=ilp32 -O2 -c -o mac-builtin-fail.o mac-builtin.c
+
+mac-builtin:
+	riscv32-corev-elf-gcc -march=rv32imc_xcorevmac -mabi=ilp32 -O2 -c -o mac-builtin.o mac-builtin.c
+
+mac:
+	riscv32-corev-elf-gcc -march=rv32imc_xcorevmac -mabi=ilp32 -O2 -c -o mac.o mac.c
+
+objdump: build
+	@echo
+	@echo "------------------------------------------------------------"
+	@echo
+	riscv32-corev-elf-objdump -d memcpy-wo-ext.o
+	@echo
+	@echo "------------------------------------------------------------"
+	@echo
+	riscv32-corev-elf-objdump -d memcpy.o
+	@echo
+	@echo "------------------------------------------------------------"
+	@echo
+	riscv32-corev-elf-objdump -d implicit-memcpy.o
+	@echo
+	@echo "------------------------------------------------------------"
+	@echo
+	riscv32-corev-elf-objdump -d mac-builtin.o
+	@echo
+	@echo "------------------------------------------------------------"
+	@echo
+	riscv32-corev-elf-objdump -d mac.o
+
+clean:
+	rm -f *.o *.s
